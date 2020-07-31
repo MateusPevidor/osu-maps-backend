@@ -25,7 +25,8 @@
     ],
     "class-methods-use-this": "off",
     "import/first": "warn",
-    "prefer-const": "off"
+    "prefer-const": "off",
+    "camelcase": "off"
   },
   "settings": {
     "import/resolver": {

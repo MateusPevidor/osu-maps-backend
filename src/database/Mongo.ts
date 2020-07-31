@@ -1,9 +1,6 @@
-import mongoose, { FilterQuery } from 'mongoose';
-
-interface Beatmap {
-  beatmapset_id: string; // eslint-disable-line
-  difficultyrating: number;
-}
+import mongoose from 'mongoose';
+import BeatmapModel from './models/Beatmap';
+import Beatmap from '../interfaces/IBeatmap';
 
 class Mongo {
   constructor() {
@@ -44,6 +41,25 @@ class Mongo {
     model: mongoose.Model<mongoose.Document, unknown>,
     data: any,
   ) {
+    if (model.modelName === 'Beatmap') {
+      const beatmaps = (
+        await Promise.all(
+          data.map(async (beatmap: Beatmap) => {
+            return {
+              beatmapExists: await model.findOne({
+                beatmap_id: beatmap.beatmap_id,
+              }),
+            };
+          }),
+        )
+      ).filter((beatmap: any) => !beatmap.beatmapExists);
+
+      if (beatmaps.length > 0) {
+        const createdBeatmaps = await model.create(beatmaps);
+        return createdBeatmaps;
+      }
+      return null;
+    }
     const newData = await model.create(data);
     return newData;
   }

@@ -14,4 +14,12 @@ routes.get('/', async (request, response) => {
   }
 });
 
+routes.post('/', async (request, response) => {
+  try {
+    return await beatmapsController.store(request, response);
+  } catch (err) {
+    return response.json(err);
+  }
+});
+
 export default routes;
