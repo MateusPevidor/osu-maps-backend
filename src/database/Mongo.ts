@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import BeatmapModel from './models/Beatmap';
 import Beatmap from '../interfaces/IBeatmap';
 
 class Mongo {
@@ -49,11 +48,13 @@ class Mongo {
               beatmapExists: await model.findOne({
                 beatmap_id: beatmap.beatmap_id,
               }),
+              beatmap,
             };
           }),
         )
-      ).filter((beatmap: any) => !beatmap.beatmapExists);
-
+      )
+        .filter((beatmap: any) => !beatmap.beatmapExists)
+        .map((beatmap: any) => beatmap.beatmap);
       if (beatmaps.length > 0) {
         const createdBeatmaps = await model.create(beatmaps);
         return createdBeatmaps;
